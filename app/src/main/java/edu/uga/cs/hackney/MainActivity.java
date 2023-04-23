@@ -3,6 +3,7 @@ package edu.uga.cs.hackney;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -15,8 +16,6 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class MainActivity extends AppCompatActivity {
     private FirebaseAuth auth;
-    private String email;
-    private String password;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,17 +26,18 @@ public class MainActivity extends AppCompatActivity {
         Button signIn = findViewById(R.id.button2);
         Button addRideOffer = findViewById(R.id.button4);
         Button addRideRequest = findViewById(R.id.button5);
-        EditText emailEmpty = findViewById(R.id.editTextTextPersonName);
-        EditText passwordEmpty = findViewById(R.id.editTextTextPassword);
 
         auth = FirebaseAuth.getInstance();
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        email = "email@email.net";
-        password = "Shrenk";
+        String email = "email@email.net";
+        String password = "Shrenk";
 
         signUp.setOnClickListener(view -> {
-            email = emailEmpty.getText().toString();
-            password = passwordEmpty.getText().toString();
+
+            Intent intent = new Intent(view.getContext(), RegisterActivity.class);
+            view.getContext().startActivity(intent);
+
+            /*
             auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     Toast.makeText(getApplicationContext(),
@@ -47,12 +47,10 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(MainActivity.this, "Sign up failed.",
                             Toast.LENGTH_SHORT).show();
                 }
-            });
+            }); */
         });
 
         signIn.setOnClickListener(view -> {
-            email = emailEmpty.getText().toString();
-            password = passwordEmpty.getText().toString();
             auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     Toast.makeText(getApplicationContext(),
