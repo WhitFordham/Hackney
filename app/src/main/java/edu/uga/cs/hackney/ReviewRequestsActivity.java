@@ -5,11 +5,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -31,6 +34,15 @@ public class ReviewRequestsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_review_requests);
 
         recyclerView = findViewById( R.id.RecyclerView2 );
+
+        FloatingActionButton floatingButton = findViewById(R.id.floatingActionButton);
+        floatingButton.setOnClickListener( new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent( ReviewRequestsActivity.this, NewRideActivity.class );
+                startActivity( intent );
+            }
+        });
 
         ridesList = new ArrayList<Ride>();
 
