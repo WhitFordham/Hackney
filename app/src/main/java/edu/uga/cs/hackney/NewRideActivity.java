@@ -15,8 +15,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 public class NewRideActivity extends AppCompatActivity {
 
@@ -42,9 +40,35 @@ public class NewRideActivity extends AppCompatActivity {
         Button offerButton = findViewById(R.id.button11);
 
         offerButton.setOnClickListener( new ButtonClickListener()) ;
+        requestButton.setOnClickListener( new ButtonClickListener2()) ;
     }
 
     private class ButtonClickListener implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            String date = dateView.getText().toString();
+            String time = timeView.getText().toString();
+            String startLocation = startLocationView.getText().toString();
+            String endLocation = endLocationView.getText().toString();
+            Double price = Double.valueOf(priceView.getText().toString());
+            final Ride rideRequest = new Ride(date + time, startLocation, endLocation, price);
+
+            auth = FirebaseAuth.getInstance();
+            FirebaseDatabase database = FirebaseDatabase.getInstance();
+
+            DatabaseReference reference = database.getReference("rideOffers");
+
+            reference.push().setValue(rideRequest).addOnSuccessListener(aVoid -> {
+                Toast.makeText(getApplicationContext(), "Ride Request created",
+                        Toast.LENGTH_SHORT).show();
+            }).addOnFailureListener(error -> {
+                Toast.makeText(getApplicationContext(), "Failed to create a ride request",
+                        Toast.LENGTH_SHORT).show();
+            });
+        }
+    }
+
+    private class ButtonClickListener2 implements View.OnClickListener {
         @Override
         public void onClick(View v) {
             String date = dateView.getText().toString();
