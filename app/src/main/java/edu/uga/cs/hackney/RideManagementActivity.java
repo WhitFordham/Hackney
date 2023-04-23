@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 public class RideManagementActivity extends AppCompatActivity {
 
@@ -19,14 +20,19 @@ public class RideManagementActivity extends AppCompatActivity {
         Button rideOffersButton = findViewById(R.id.button8);
         Button pointsButton = findViewById(R.id.button9);
 
-        newRideButton.setOnClickListener( new NewRideButtonClickListener() );
-    }
+        newRideButton.setOnClickListener(view -> {
+            Intent intent = new Intent( RideManagementActivity.this, NewRideActivity.class );
+            startActivity( intent );
+        });
 
-    private class NewRideButtonClickListener implements View.OnClickListener {
-        @Override
-        public void onClick(View view) {
-            Intent intent = new Intent(view.getContext(), NewRideActivity.class);
-            view.getContext().startActivity( intent );
-        }
+        rideRequestButton.setOnClickListener(view -> {
+            Intent intent = new Intent( RideManagementActivity.this, ReviewRequestsActivity.class );
+            startActivity( intent );
+        });
+
+        rideOffersButton.setOnClickListener(view -> {
+            Intent intent = new Intent( RideManagementActivity.this, ReviewOffersActivity.class );
+            startActivity( intent );
+        });
     }
 }

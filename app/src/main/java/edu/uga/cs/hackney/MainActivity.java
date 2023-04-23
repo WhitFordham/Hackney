@@ -51,15 +51,19 @@ public class MainActivity extends AppCompatActivity {
         });
 
         signIn.setOnClickListener(view -> {
+            Intent intent = new Intent( MainActivity.this, RideManagementActivity.class );
+            startActivity( intent );
             auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     Toast.makeText(getApplicationContext(),
                             "Signed in successfully!", Toast.LENGTH_SHORT).show();
+
                 } else {
                     Toast.makeText(getApplicationContext(), "Sign in failed.",
                             Toast.LENGTH_SHORT).show();
                 }
             });
+
         });
 
         addRideOffer.setOnClickListener(view -> {
