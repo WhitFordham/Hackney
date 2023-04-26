@@ -53,15 +53,31 @@
 
             </LinearLayout>
 
-            <Button
-                android:id="@+id/button13"
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right|end"
-                android:layout_marginTop="20dp"
-                android:foregroundGravity="right"
-                android:gravity="right"
-                android:text="Accept Ride" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <Button
+                    android:id="@+id/button13"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right|end"
+                    android:foregroundGravity="right"
+                    android:gravity="right"
+                    android:text="edit ride" />
+
+                <Button
+                    android:id="@+id/button15"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_weight="1"
+                    android:foregroundGravity="right"
+                    android:gravity="right"
+                    android:text="delete ride" />
+            </LinearLayout>
+
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>
