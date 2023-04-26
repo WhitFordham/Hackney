@@ -34,5 +34,10 @@ public class RideManagementActivity extends AppCompatActivity {
             Intent intent = new Intent( RideManagementActivity.this, ReviewOffersActivity.class );
             startActivity( intent );
         });
+
+        pointsButton.setOnClickListener(view -> {
+            Intent intent = new Intent( RideManagementActivity.this, PointsActivity.class );
+            startActivity( intent );
+        });
     }
 }
