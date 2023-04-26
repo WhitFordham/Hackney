@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -40,13 +41,7 @@ public class NewRideActivity extends AppCompatActivity {
         Button requestButton = findViewById(R.id.button10);
         Button offerButton = findViewById(R.id.button11);
 
-        offerButton.setOnClickListener( new ButtonClickListener()) ;
-        requestButton.setOnClickListener( new ButtonClickListener2()) ;
-    }
-
-    private class ButtonClickListener implements View.OnClickListener {
-        @Override
-        public void onClick(View v) {
+        offerButton.setOnClickListener( view -> {
             String date = dateView.getText().toString();
             String time = timeView.getText().toString();
             String startLocation = startLocationView.getText().toString();
@@ -67,14 +62,15 @@ public class NewRideActivity extends AppCompatActivity {
                         Toast.LENGTH_SHORT).show();
             });
 
+            FirebaseUser user = auth.getCurrentUser();
+            database.getReference("users").child(user.getUid()).child("createdOffers")
+                    .setValue(rideOffer);
+
             Intent intent = new Intent( NewRideActivity.this, ReviewOffersActivity.class );
             startActivity( intent );
-        }
-    }
+        });
 
-    private class ButtonClickListener2 implements View.OnClickListener {
-        @Override
-        public void onClick(View v) {
+        requestButton.setOnClickListener( view -> {
             String date = dateView.getText().toString();
             String time = timeView.getText().toString();
             String startLocation = startLocationView.getText().toString();
@@ -95,8 +91,12 @@ public class NewRideActivity extends AppCompatActivity {
                         Toast.LENGTH_SHORT).show();
             });
 
+            FirebaseUser user = auth.getCurrentUser();
+            database.getReference("users").child(user.getUid()).child("createdRequests")
+                    .setValue(rideRequest);
+
             Intent intent = new Intent( NewRideActivity.this, ReviewRequestsActivity.class );
             startActivity( intent );
-        }
+        });
     }
 }
