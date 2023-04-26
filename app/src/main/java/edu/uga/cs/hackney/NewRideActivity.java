@@ -52,18 +52,18 @@ public class NewRideActivity extends AppCompatActivity {
             String startLocation = startLocationView.getText().toString();
             String endLocation = endLocationView.getText().toString();
             Double price = Double.valueOf(priceView.getText().toString());
-            final Ride rideRequest = new Ride(date + time, startLocation, endLocation, price);
+            final Ride rideOffer = new Ride(date + time, startLocation, endLocation, price);
 
             auth = FirebaseAuth.getInstance();
             FirebaseDatabase database = FirebaseDatabase.getInstance();
 
             DatabaseReference reference = database.getReference("rideOffers");
 
-            reference.push().setValue(rideRequest).addOnSuccessListener(aVoid -> {
-                Toast.makeText(getApplicationContext(), "Ride Request created",
+            reference.push().setValue(rideOffer).addOnSuccessListener(aVoid -> {
+                Toast.makeText(getApplicationContext(), "Ride Offer created",
                         Toast.LENGTH_SHORT).show();
             }).addOnFailureListener(error -> {
-                Toast.makeText(getApplicationContext(), "Failed to create a ride request",
+                Toast.makeText(getApplicationContext(), "Failed to create a ride offer",
                         Toast.LENGTH_SHORT).show();
             });
 

@@ -83,6 +83,10 @@ public class RegisterActivity extends AppCompatActivity {
                             }
                         }
                     });
+
+            Intent intent = new Intent( RegisterActivity.this, RideManagementActivity.class );
+            startActivity( intent );
+
         }
     }
 }
