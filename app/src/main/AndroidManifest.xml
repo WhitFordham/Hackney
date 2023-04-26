@@ -14,6 +14,9 @@
         android:theme="@style/Theme.Hackney"
         tools:targetApi="31">
         <activity
+            android:name=".EditRideActivity"
+            android:exported="false" />
+        <activity
             android:name=".UserRidesActivity"
             android:exported="false" />
         <activity
