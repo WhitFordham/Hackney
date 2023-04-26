@@ -15,8 +15,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class MainActivity extends AppCompatActivity {
-    private FirebaseAuth auth;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,43 +25,16 @@ public class MainActivity extends AppCompatActivity {
         Button addRideOffer = findViewById(R.id.button4);
         Button addRideRequest = findViewById(R.id.button5);
 
-        auth = FirebaseAuth.getInstance();
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        String email = "email@email.net";
-        String password = "Shrenk";
 
         signUp.setOnClickListener(view -> {
-
             Intent intent = new Intent(view.getContext(), RegisterActivity.class);
             view.getContext().startActivity(intent);
-
-            /*
-            auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    Toast.makeText(getApplicationContext(),
-                            "Registered user: " + email,
-                            Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(MainActivity.this, "Sign up failed.",
-                            Toast.LENGTH_SHORT).show();
-                }
-            }); */
         });
 
         signIn.setOnClickListener(view -> {
-            Intent intent = new Intent( MainActivity.this, RideManagementActivity.class );
-            startActivity( intent );
-            auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    Toast.makeText(getApplicationContext(),
-                            "Signed in successfully!", Toast.LENGTH_SHORT).show();
-
-                } else {
-                    Toast.makeText(getApplicationContext(), "Sign in failed.",
-                            Toast.LENGTH_SHORT).show();
-                }
-            });
-
+            Intent intent = new Intent(MainActivity.this, SignInActivity.class);
+            startActivity(intent);
         });
 
         addRideOffer.setOnClickListener(view -> {
@@ -81,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Failed to create a ride offer",
                         Toast.LENGTH_SHORT).show();
             });
-    });
+        });
 
         addRideRequest.setOnClickListener(view -> {
             String dateAndTime = "March 22, 1785, 4:30";
@@ -99,5 +70,5 @@ public class MainActivity extends AppCompatActivity {
                         Toast.LENGTH_SHORT).show();
             });
         });
-}
+    }
 }
