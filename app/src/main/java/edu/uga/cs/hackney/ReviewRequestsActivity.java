@@ -36,12 +36,9 @@ public class ReviewRequestsActivity extends AppCompatActivity {
         recyclerView = findViewById( R.id.RecyclerView2 );
 
         FloatingActionButton floatingButton = findViewById(R.id.floatingActionButton);
-        floatingButton.setOnClickListener( new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        floatingButton.setOnClickListener( view -> {
                 Intent intent = new Intent( ReviewRequestsActivity.this, NewRideActivity.class );
                 startActivity( intent );
-            }
         });
 
         ridesList = new ArrayList<Ride>();

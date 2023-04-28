@@ -63,8 +63,8 @@ public class NewRideActivity extends AppCompatActivity {
             });
 
             FirebaseUser user = auth.getCurrentUser();
-            database.getReference("users").child(user.getUid()).child("createdOffers")
-                    .setValue(rideOffer);
+            database.getReference("users").child(user.getUid()).child("createdRides")
+                    .push().setValue(rideOffer);
 
             Intent intent = new Intent( NewRideActivity.this, ReviewOffersActivity.class );
             startActivity( intent );
@@ -92,8 +92,8 @@ public class NewRideActivity extends AppCompatActivity {
             });
 
             FirebaseUser user = auth.getCurrentUser();
-            database.getReference("users").child(user.getUid()).child("createdRequests")
-                    .setValue(rideRequest);
+            database.getReference("users").child(user.getUid()).child("createdRides")
+                    .push().setValue(rideRequest);
 
             Intent intent = new Intent( NewRideActivity.this, ReviewRequestsActivity.class );
             startActivity( intent );
