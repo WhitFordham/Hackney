@@ -45,5 +45,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="manage points" />
+
+        <Button
+            android:id="@+id/button4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Log Out" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -52,9 +52,10 @@ public class NewRideActivity extends AppCompatActivity {
             auth = FirebaseAuth.getInstance();
             FirebaseDatabase database = FirebaseDatabase.getInstance();
 
-            DatabaseReference reference = database.getReference("rideOffers");
+            DatabaseReference reference = database.getReference("rideOffers").push();
+            String key = reference.getKey();
 
-            reference.push().setValue(rideOffer).addOnSuccessListener(aVoid -> {
+            reference.setValue(rideOffer).addOnSuccessListener(aVoid -> {
                 Toast.makeText(getApplicationContext(), "Ride Offer created",
                         Toast.LENGTH_SHORT).show();
             }).addOnFailureListener(error -> {
@@ -64,7 +65,7 @@ public class NewRideActivity extends AppCompatActivity {
 
             FirebaseUser user = auth.getCurrentUser();
             database.getReference("users").child(user.getUid()).child("createdRides")
-                    .push().setValue(rideOffer);
+                    .child(key).setValue(rideOffer);
 
             Intent intent = new Intent( NewRideActivity.this, ReviewOffersActivity.class );
             startActivity( intent );
@@ -81,19 +82,21 @@ public class NewRideActivity extends AppCompatActivity {
             auth = FirebaseAuth.getInstance();
             FirebaseDatabase database = FirebaseDatabase.getInstance();
 
-            DatabaseReference reference = database.getReference("rideRequests");
+            DatabaseReference reference = database.getReference("rideRequests").push();
+            String key = reference.getKey();
 
-            reference.push().setValue(rideRequest).addOnSuccessListener(aVoid -> {
-                Toast.makeText(getApplicationContext(), "Ride Request created",
+            reference.setValue(rideRequest).addOnSuccessListener(aVoid -> {
+                Toast.makeText(getApplicationContext(), "Ride Offer created",
                         Toast.LENGTH_SHORT).show();
             }).addOnFailureListener(error -> {
-                Toast.makeText(getApplicationContext(), "Failed to create a ride request",
+                Toast.makeText(getApplicationContext(), "Failed to create a ride offer",
                         Toast.LENGTH_SHORT).show();
             });
 
             FirebaseUser user = auth.getCurrentUser();
             database.getReference("users").child(user.getUid()).child("createdRides")
-                    .push().setValue(rideRequest);
+                    .child(key).setValue(rideRequest);
+
 
             Intent intent = new Intent( NewRideActivity.this, ReviewRequestsActivity.class );
             startActivity( intent );
