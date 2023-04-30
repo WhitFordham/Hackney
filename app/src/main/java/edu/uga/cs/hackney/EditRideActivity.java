@@ -43,10 +43,12 @@ public class EditRideActivity extends AppCompatActivity {
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference reference = database.getReference("users").child(user.getUid()).
+        DatabaseReference userReference = database.getReference("users").child(user.getUid()).
                 child("createdRides").child(rideKey);
+        DatabaseReference offerReference = database.getReference("rideOffers").child(rideKey);
+        DatabaseReference requestReference = database.getReference("rideRequests").child(rideKey);
 
-        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+        userReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 editDate.setText(dataSnapshot.child("date").getValue().toString());
@@ -55,15 +57,47 @@ public class EditRideActivity extends AppCompatActivity {
                 editEnd.setText(dataSnapshot.child("endLocation").getValue().toString());
                 editPrice.setText(dataSnapshot.child("price").getValue().toString());
 
-                String date = editDate.getText().toString();
-                String time = editTime.getText().toString();
-                String startLocation = editStart.getText().toString();
-                String endLocation = editEnd.getText().toString();
-                Double price = Double.valueOf(editPrice.getText().toString());
-                final Ride ride = new Ride(date, time, startLocation, endLocation, price);
-
                 save.setOnClickListener(view -> {
-                    dataSnapshot.getRef().setValue(ride);
+                    String date = editDate.getText().toString();
+                    String time = editTime.getText().toString();
+                    String startLocation = editStart.getText().toString();
+                    String endLocation = editEnd.getText().toString();
+                    Double price = Double.valueOf(editPrice.getText().toString());
+                    final Ride ride = new Ride(date, time, startLocation, endLocation, price);
+
+                    userReference.setValue(ride).addOnSuccessListener(aVoid -> {
+                        Toast.makeText(EditRideActivity.this, "Ride updated",
+                                Toast.LENGTH_SHORT).show();
+                    }).addOnFailureListener(e -> {
+                        Toast.makeText(EditRideActivity.this, "Ride not updated",
+                                Toast.LENGTH_SHORT).show();
+                    });
+
+                    offerReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            if (dataSnapshot.exists())
+                                offerReference.setValue(ride);
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+
+                    requestReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            if (dataSnapshot.exists())
+                                requestReference.setValue(ride);
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
                     Intent intent = new Intent(EditRideActivity.this, UserRidesActivity.class);
                     startActivity(intent);
                 });
