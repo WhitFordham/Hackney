@@ -17,8 +17,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.List;
 
@@ -56,7 +59,57 @@ public class RideRecyclerAdapter extends RecyclerView.Adapter<RideRecyclerAdapte
             if (layoutNumber == 1) {
                 acceptButton = itemView.findViewById(R.id.button13);
                 acceptButton.setOnClickListener(view -> {
-                    Log.d("Message", "Accepted");
+                    Ride ride = rideList.get(getAdapterPosition());
+
+                    FirebaseDatabase database = FirebaseDatabase.getInstance();
+                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                    DatabaseReference userReference = database.getReference("users").child(user.getUid())
+                            .child("acceptedRides").child(ride.getKey());
+                    DatabaseReference offerReference = database.getReference("rideOffers").child(ride.getKey());
+                    DatabaseReference requestReference = database.getReference("rideRequests").child(ride.getKey());
+
+                    userReference.setValue(ride);
+
+                    DatabaseReference creatorReference = database.getReference("users").child(ride.getUserID());
+
+                    creatorReference.child("acceptedRides").child(ride.getKey())
+                            .setValue(ride);
+                    creatorReference.child("createdRides").child(ride.getKey()).removeValue();
+
+                    offerReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            if (dataSnapshot.exists()) {
+                             DatabaseReference acceptedOffer = database.getReference("acceptedOffers")
+                                     .child(ride.getKey());
+                             acceptedOffer.setValue(ride);
+                             offerReference.removeValue();
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+
+                    requestReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            if (dataSnapshot.exists()) {
+                                DatabaseReference acceptedRequest = database.getReference("acceptedRequests")
+                                        .child(ride.getKey());
+                                acceptedRequest.setValue(ride);
+                                requestReference.removeValue();
+                            }
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
                 });
             } else if (layoutNumber == 2) {
                 editButton = itemView.findViewById(R.id.button13);

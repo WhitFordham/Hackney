@@ -33,15 +33,15 @@ public class NewRideActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_ride);
 
-        dateView = findViewById( R.id.editTextDate );
-        timeView = findViewById( R.id.editTextTime );
-        startLocationView = findViewById( R.id.editTextTextPostalAddress );
-        endLocationView = findViewById( R.id.editTextTextPostalAddress2 );
-        priceView = findViewById( R.id.editTextNumberDecimal );
+        dateView = findViewById(R.id.editTextDate);
+        timeView = findViewById(R.id.editTextTime);
+        startLocationView = findViewById(R.id.editTextTextPostalAddress);
+        endLocationView = findViewById(R.id.editTextTextPostalAddress2);
+        priceView = findViewById(R.id.editTextNumberDecimal);
         Button requestButton = findViewById(R.id.button10);
         Button offerButton = findViewById(R.id.button11);
 
-        offerButton.setOnClickListener( view -> {
+        offerButton.setOnClickListener(view -> {
             String date = dateView.getText().toString();
             String time = timeView.getText().toString();
             String startLocation = startLocationView.getText().toString();
@@ -50,7 +50,9 @@ public class NewRideActivity extends AppCompatActivity {
             final Ride rideOffer = new Ride(date, time, startLocation, endLocation, price);
 
             auth = FirebaseAuth.getInstance();
+            FirebaseUser user = auth.getCurrentUser();
             FirebaseDatabase database = FirebaseDatabase.getInstance();
+            rideOffer.setUserID(user.getUid());
 
             DatabaseReference reference = database.getReference("rideOffers").push();
             String key = reference.getKey();
@@ -63,15 +65,14 @@ public class NewRideActivity extends AppCompatActivity {
                         Toast.LENGTH_SHORT).show();
             });
 
-            FirebaseUser user = auth.getCurrentUser();
             database.getReference("users").child(user.getUid()).child("createdRides")
                     .child(key).setValue(rideOffer);
 
-            Intent intent = new Intent( NewRideActivity.this, ReviewOffersActivity.class );
-            startActivity( intent );
+            Intent intent = new Intent(NewRideActivity.this, ReviewOffersActivity.class);
+            startActivity(intent);
         });
 
-        requestButton.setOnClickListener( view -> {
+        requestButton.setOnClickListener(view -> {
             String date = dateView.getText().toString();
             String time = timeView.getText().toString();
             String startLocation = startLocationView.getText().toString();
@@ -80,7 +81,9 @@ public class NewRideActivity extends AppCompatActivity {
             final Ride rideRequest = new Ride(date, time, startLocation, endLocation, price);
 
             auth = FirebaseAuth.getInstance();
+            FirebaseUser user = auth.getCurrentUser();
             FirebaseDatabase database = FirebaseDatabase.getInstance();
+            rideRequest.setUserID(user.getUid());
 
             DatabaseReference reference = database.getReference("rideRequests").push();
             String key = reference.getKey();
@@ -93,13 +96,12 @@ public class NewRideActivity extends AppCompatActivity {
                         Toast.LENGTH_SHORT).show();
             });
 
-            FirebaseUser user = auth.getCurrentUser();
             database.getReference("users").child(user.getUid()).child("createdRides")
                     .child(key).setValue(rideRequest);
 
 
-            Intent intent = new Intent( NewRideActivity.this, ReviewRequestsActivity.class );
-            startActivity( intent );
+            Intent intent = new Intent(NewRideActivity.this, ReviewRequestsActivity.class);
+            startActivity(intent);
         });
     }
 }

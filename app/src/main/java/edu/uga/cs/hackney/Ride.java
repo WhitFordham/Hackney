@@ -8,6 +8,7 @@ public class Ride {
     private String endLocation;
     private double price;
     private boolean isCompleted;
+    private String userID;
 
     public Ride() {
         this.key = null;
@@ -17,6 +18,7 @@ public class Ride {
         this.endLocation = null;
         this.price = 0.0;
         this.isCompleted = false;
+        this.userID = null;
     }
 
     public Ride(String date, String time, String startLocation, String endLocation, double price) {
@@ -83,5 +85,13 @@ public class Ride {
 
     public void setCompleted(boolean completed) {
         isCompleted = completed;
+    }
+
+    public String getUserID() {
+        return userID;
+    }
+
+    public void setUserID(String userID) {
+        this.userID = userID;
     }
 }
