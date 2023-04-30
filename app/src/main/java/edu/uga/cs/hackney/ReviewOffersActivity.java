@@ -116,7 +116,8 @@ public class ReviewOffersActivity extends AppCompatActivity {
                         } );
 
                         // Show a quick confirmation
-                        Toast.makeText(getApplicationContext(), "Ride created for " + ride.getDateAndTime(),
+                        Toast.makeText(getApplicationContext(), "Ride created for " + ride.getDate()
+                                + ride.getTime(),
                                 Toast.LENGTH_SHORT).show();
 
                     }
@@ -124,7 +125,8 @@ public class ReviewOffersActivity extends AppCompatActivity {
                 .addOnFailureListener( new OnFailureListener() {
                     @Override
                     public void onFailure( @NonNull Exception e ) {
-                        Toast.makeText( getApplicationContext(), "Failed to create a ride for " + ride.getDateAndTime(),
+                        Toast.makeText( getApplicationContext(), "Failed to create a ride for " + ride.getDate()
+                                + ride.getTime(),
                                 Toast.LENGTH_SHORT).show();
                     }
                 });

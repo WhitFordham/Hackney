@@ -47,7 +47,7 @@ public class NewRideActivity extends AppCompatActivity {
             String startLocation = startLocationView.getText().toString();
             String endLocation = endLocationView.getText().toString();
             Double price = Double.valueOf(priceView.getText().toString());
-            final Ride rideOffer = new Ride(date + time, startLocation, endLocation, price);
+            final Ride rideOffer = new Ride(date, time, startLocation, endLocation, price);
 
             auth = FirebaseAuth.getInstance();
             FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -77,7 +77,7 @@ public class NewRideActivity extends AppCompatActivity {
             String startLocation = startLocationView.getText().toString();
             String endLocation = endLocationView.getText().toString();
             Double price = Double.valueOf(priceView.getText().toString());
-            final Ride rideRequest = new Ride(date + time, startLocation, endLocation, price);
+            final Ride rideRequest = new Ride(date, time, startLocation, endLocation, price);
 
             auth = FirebaseAuth.getInstance();
             FirebaseDatabase database = FirebaseDatabase.getInstance();

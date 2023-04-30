@@ -35,7 +35,8 @@ public class RideRecyclerAdapter extends RecyclerView.Adapter<RideRecyclerAdapte
 
     class RideHolder extends RecyclerView.ViewHolder {
 
-        TextView dateAndTime;
+        TextView date;
+        TextView time;
         TextView startLocation;
         TextView endLocation;
         TextView price;
@@ -46,7 +47,8 @@ public class RideRecyclerAdapter extends RecyclerView.Adapter<RideRecyclerAdapte
         public RideHolder(View itemView) {
             super(itemView);
 
-            dateAndTime = itemView.findViewById(R.id.textView2);
+            date = itemView.findViewById(R.id.textView2);
+            time = itemView.findViewById(R.id.textView11);
             startLocation = itemView.findViewById(R.id.textView3);
             endLocation = itemView.findViewById(R.id.textView5);
             price = itemView.findViewById(R.id.textView6);
@@ -89,7 +91,6 @@ public class RideRecyclerAdapter extends RecyclerView.Adapter<RideRecyclerAdapte
                         Toast.makeText(context, "Ride not removed", Toast.LENGTH_SHORT).show();
                     });
 
-                    Log.d("Key", ride.getKey());
                     DatabaseReference offerReference = database.getReference("rideOffers").
                             child(ride.getKey());
                     offerReference.removeValue().addOnSuccessListener(aVoid -> {
@@ -123,10 +124,11 @@ public class RideRecyclerAdapter extends RecyclerView.Adapter<RideRecyclerAdapte
     public void onBindViewHolder(RideHolder holder, int position) {
         Ride ride = rideList.get(position);
 
-        holder.dateAndTime.setText(ride.getDateAndTime());
-        holder.startLocation.setText(ride.getStartLocation());
-        holder.endLocation.setText(ride.getEndLocation());
-        holder.price.setText(String.valueOf(ride.getPrice()));
+        holder.date.setText("Date: " + ride.getDate());
+        holder.time.setText("Time: " + ride.getTime());
+        holder.startLocation.setText("Start Point: " + ride.getStartLocation());
+        holder.endLocation.setText("Destination: " + ride.getEndLocation());
+        holder.price.setText("Price: " + String.valueOf(ride.getPrice()));
 
     }
 
