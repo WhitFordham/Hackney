@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -37,6 +38,12 @@ public class ReviewOffersActivity extends AppCompatActivity {
         setContentView(R.layout.activity_review_offers);
 
         recyclerView = findViewById( R.id.recyclerView );
+        Button butt = findViewById(R.id.button19);
+
+        butt.setOnClickListener(view -> {
+            Intent intent = new Intent( ReviewOffersActivity.this, RideManagementActivity.class );
+            startActivity( intent );
+        });
 
         FloatingActionButton floatingButton = findViewById(R.id.floatingActionButton2);
         floatingButton.setOnClickListener( view -> {

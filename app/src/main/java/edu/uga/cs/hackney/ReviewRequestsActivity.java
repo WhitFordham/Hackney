@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -32,6 +33,13 @@ public class ReviewRequestsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_review_requests);
+
+        Button butt = findViewById(R.id.button17);
+
+        butt.setOnClickListener(view -> {
+            Intent intent = new Intent( ReviewRequestsActivity.this, RideManagementActivity.class );
+            startActivity( intent );
+        });
 
         recyclerView = findViewById( R.id.RecyclerView2 );
 
