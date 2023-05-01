@@ -26,13 +26,19 @@
             android:id="@+id/button7"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="ride requests" />
+            android:text="View All Ride Requests" />
 
         <Button
             android:id="@+id/button8"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="ride offers" />
+            android:text="View all ride offers" />
+
+        <Button
+            android:id="@+id/button16"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="View My Accepted Rides" />
 
         <Button
             android:id="@+id/button14"

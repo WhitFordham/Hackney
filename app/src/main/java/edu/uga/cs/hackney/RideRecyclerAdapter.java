@@ -17,11 +17,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.List;
 
@@ -46,6 +43,7 @@ public class RideRecyclerAdapter extends RecyclerView.Adapter<RideRecyclerAdapte
         Button deleteButton;
         Button editButton;
         Button acceptButton;
+        Button confirmButton;
 
         public RideHolder(View itemView) {
             super(itemView);
@@ -139,6 +137,27 @@ public class RideRecyclerAdapter extends RecyclerView.Adapter<RideRecyclerAdapte
                         requestReference.removeValue();
                     }
                 });
+            } else if (layoutNumber == 3) {
+                confirmButton = itemView.findViewById(R.id.button5);
+                confirmButton.setOnClickListener(view -> {
+                    Ride ride = rideList.get(getAdapterPosition());
+                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                    FirebaseDatabase database = FirebaseDatabase.getInstance();
+                    DatabaseReference reference = database.getReference("users");
+
+                    ride.addPeopleConfirmed();
+                    reference.child(ride.getDriverID()).child("acceptedRides").child(ride.getKey())
+                            .setValue(ride);
+                    reference.child(ride.getRiderID()).child("acceptedRides").child(ride.getKey())
+                            .setValue(ride);
+
+                    if (ride.getPeopleConfirmed() < 2) {
+                        Toast.makeText(context, "Thank you for confirming the ride. " +
+                                "Please wait for the other person to confirm as well.", Toast.LENGTH_SHORT).show();
+                    } else {
+
+                    }
+                });
             }
         }
     }
@@ -153,6 +172,9 @@ public class RideRecyclerAdapter extends RecyclerView.Adapter<RideRecyclerAdapte
         } else if (context instanceof UserRidesActivity) {
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.ride2, parent, false);
             layoutNumber = 2;
+        } else if (context instanceof  AcceptedRidesActivity) {
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.ride3, parent, false);
+            layoutNumber = 3;
         }
         return new RideHolder(view);
     }

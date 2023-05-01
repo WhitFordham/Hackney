@@ -20,6 +20,7 @@ public class RideManagementActivity extends AppCompatActivity {
         Button rideOffersButton = findViewById(R.id.button8);
         Button pointsButton = findViewById(R.id.button9);
         Button userRidesButton = findViewById(R.id.button14);
+        Button acceptedRidesButton = findViewById(R.id.button16);
         Button logout = findViewById(R.id.button4);
 
         newRideButton.setOnClickListener(view -> {
@@ -35,6 +36,11 @@ public class RideManagementActivity extends AppCompatActivity {
         rideOffersButton.setOnClickListener(view -> {
             Intent intent = new Intent( RideManagementActivity.this, ReviewOffersActivity.class );
             startActivity( intent );
+        });
+
+        acceptedRidesButton.setOnClickListener(view -> {
+            Intent intent = new Intent(RideManagementActivity.this, AcceptedRidesActivity.class);
+            startActivity(intent);
         });
 
         pointsButton.setOnClickListener(view -> {
