@@ -13,10 +13,13 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ValueEventListener;
 
 public class NewRideActivity extends AppCompatActivity {
 
@@ -83,25 +86,44 @@ public class NewRideActivity extends AppCompatActivity {
             auth = FirebaseAuth.getInstance();
             FirebaseUser user = auth.getCurrentUser();
             FirebaseDatabase database = FirebaseDatabase.getInstance();
-            rideRequest.setRiderID(user.getUid());
-
-            DatabaseReference reference = database.getReference("rideRequests").push();
-            String key = reference.getKey();
-
-            reference.setValue(rideRequest).addOnSuccessListener(aVoid -> {
-                Toast.makeText(getApplicationContext(), "Ride Offer created",
-                        Toast.LENGTH_SHORT).show();
-            }).addOnFailureListener(error -> {
-                Toast.makeText(getApplicationContext(), "Failed to create a ride offer",
-                        Toast.LENGTH_SHORT).show();
-            });
-
-            database.getReference("users").child(user.getUid()).child("createdRides")
-                    .child(key).setValue(rideRequest);
 
 
-            Intent intent = new Intent(NewRideActivity.this, ReviewRequestsActivity.class);
-            startActivity(intent);
+            database.getReference("users").child(user.getUid()).child("points")
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            Double points = Double.valueOf(snapshot.getValue().toString());
+                            if (points < rideRequest.getPrice()) {
+                                Toast.makeText(getApplicationContext(), "You do not have enough points",
+                                        Toast.LENGTH_SHORT).show();
+                            } else {
+                                rideRequest.setRiderID(user.getUid());
+
+                                DatabaseReference reference = database.getReference("rideRequests").push();
+                                String key = reference.getKey();
+
+                                reference.setValue(rideRequest).addOnSuccessListener(aVoid -> {
+                                    Toast.makeText(getApplicationContext(), "Ride Request created",
+                                            Toast.LENGTH_SHORT).show();
+                                }).addOnFailureListener(error -> {
+                                    Toast.makeText(getApplicationContext(), "Failed to create a ride request",
+                                            Toast.LENGTH_SHORT).show();
+                                });
+
+                                database.getReference("users").child(user.getUid()).child("createdRides")
+                                        .child(key).setValue(rideRequest);
+
+
+                                Intent intent = new Intent(NewRideActivity.this, ReviewRequestsActivity.class);
+                                startActivity(intent);
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
         });
     }
 }

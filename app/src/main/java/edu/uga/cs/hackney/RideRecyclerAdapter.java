@@ -1,10 +1,7 @@
 package edu.uga.cs.hackney;
 
-import static com.firebase.ui.auth.AuthUI.getApplicationContext;
-
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,8 +14,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.List;
 
@@ -40,6 +40,8 @@ public class RideRecyclerAdapter extends RecyclerView.Adapter<RideRecyclerAdapte
         TextView startLocation;
         TextView endLocation;
         TextView price;
+        TextView driver;
+        TextView passenger;
         Button deleteButton;
         Button editButton;
         Button acceptButton;
@@ -53,6 +55,8 @@ public class RideRecyclerAdapter extends RecyclerView.Adapter<RideRecyclerAdapte
             startLocation = itemView.findViewById(R.id.textView3);
             endLocation = itemView.findViewById(R.id.textView5);
             price = itemView.findViewById(R.id.textView6);
+            driver = itemView.findViewById(R.id.textView12);
+            passenger = itemView.findViewById(R.id.textView13);
 
             if (layoutNumber == 1) {
                 acceptButton = itemView.findViewById(R.id.button13);
@@ -141,21 +145,59 @@ public class RideRecyclerAdapter extends RecyclerView.Adapter<RideRecyclerAdapte
                 confirmButton = itemView.findViewById(R.id.button5);
                 confirmButton.setOnClickListener(view -> {
                     Ride ride = rideList.get(getAdapterPosition());
-                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                     FirebaseDatabase database = FirebaseDatabase.getInstance();
                     DatabaseReference reference = database.getReference("users");
 
                     ride.addPeopleConfirmed();
-                    reference.child(ride.getDriverID()).child("acceptedRides").child(ride.getKey())
-                            .setValue(ride);
-                    reference.child(ride.getRiderID()).child("acceptedRides").child(ride.getKey())
-                            .setValue(ride);
 
-                    if (ride.getPeopleConfirmed() < 2) {
+                    if (ride.getPeopleConfirmed() == 1) {
+                        reference.child(ride.getDriverID()).child("acceptedRides").child(ride.getKey())
+                                .setValue(ride);
+                        reference.child(ride.getRiderID()).child("acceptedRides").child(ride.getKey())
+                                .setValue(ride);
+
+                        notifyItemRemoved(getAdapterPosition());
+                        reference.child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                                .child("acceptedRides").child(ride.getKey()).removeValue();
+
                         Toast.makeText(context, "Thank you for confirming the ride. " +
                                 "Please wait for the other person to confirm as well.", Toast.LENGTH_SHORT).show();
-                    } else {
+                    } else if (ride.getPeopleConfirmed() == 2) {
+                        notifyItemRemoved(getAdapterPosition());
+                        reference.child(ride.getDriverID()).child("points").
+                                addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        Double points = Double.valueOf(snapshot.getValue().toString());
+                                        reference.child(ride.getDriverID()).child("points").
+                                                setValue(points + ride.getPrice());
+                                    }
 
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                    }
+                                });
+                        reference.child(ride.getRiderID()).child("points").
+                                addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        Double points = Double.valueOf(snapshot.getValue().toString());
+                                        reference.child(ride.getRiderID()).child("points").
+                                                setValue(points - ride.getPrice());
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                    }
+                                });
+
+                        Toast.makeText(context, "Thank you for confirming the ride. " +
+                                "Points have been transferred.", Toast.LENGTH_SHORT).show();
+
+                        reference.child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                                .child("acceptedRides").child(ride.getKey()).removeValue();
                     }
                 });
             }
@@ -172,7 +214,7 @@ public class RideRecyclerAdapter extends RecyclerView.Adapter<RideRecyclerAdapte
         } else if (context instanceof UserRidesActivity) {
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.ride2, parent, false);
             layoutNumber = 2;
-        } else if (context instanceof  AcceptedRidesActivity) {
+        } else if (context instanceof AcceptedRidesActivity) {
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.ride3, parent, false);
             layoutNumber = 3;
         }
@@ -188,6 +230,11 @@ public class RideRecyclerAdapter extends RecyclerView.Adapter<RideRecyclerAdapte
         holder.startLocation.setText("Start Point: " + ride.getStartLocation());
         holder.endLocation.setText("Destination: " + ride.getEndLocation());
         holder.price.setText("Price: " + String.valueOf(ride.getPrice()));
+
+        if (layoutNumber == 3) {
+            holder.driver.setText("Driver: " + ride.getDriverID());
+            holder.passenger.setText("Passenger: " + ride.getRiderID());
+        }
 
     }
 
