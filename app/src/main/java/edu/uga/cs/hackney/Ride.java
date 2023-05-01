@@ -7,8 +7,9 @@ public class Ride {
     private String startLocation;
     private String endLocation;
     private double price;
-    private boolean isCompleted;
-    private String userID;
+    private int peopleConfirmed;
+    private String driverID;
+    private String riderID;
 
     public Ride() {
         this.key = null;
@@ -17,8 +18,9 @@ public class Ride {
         this.startLocation = null;
         this.endLocation = null;
         this.price = 0.0;
-        this.isCompleted = false;
-        this.userID = null;
+        this.peopleConfirmed = 0;
+        this.driverID = null;
+        this.riderID = null;
     }
 
     public Ride(String date, String time, String startLocation, String endLocation, double price) {
@@ -28,7 +30,9 @@ public class Ride {
         this.startLocation = startLocation;
         this.endLocation = endLocation;
         this.price = price;
-        this.isCompleted = false;
+        this.peopleConfirmed = 0;
+        this.driverID = null;
+        this.riderID = null;
     }
 
     public String getKey() {
@@ -79,19 +83,25 @@ public class Ride {
         this.price = price;
     }
 
-    public boolean isCompleted() {
-        return isCompleted;
+    public int getPeopleConfirmed() {return peopleConfirmed;};
+
+    public void addPeopleConfirmed() {
+        peopleConfirmed++;
     }
 
-    public void setCompleted(boolean completed) {
-        isCompleted = completed;
+    public String getDriverID() {
+        return driverID;
     }
 
-    public String getUserID() {
-        return userID;
+    public void setDriverID(String driverID) {
+        this.driverID = driverID;
     }
 
-    public void setUserID(String userID) {
-        this.userID = userID;
+    public String getRiderID() {
+        return riderID;
+    }
+
+    public void setRiderID(String riderID) {
+        this.riderID = riderID;
     }
 }

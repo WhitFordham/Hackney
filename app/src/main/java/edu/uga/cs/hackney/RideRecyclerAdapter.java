@@ -60,56 +60,39 @@ public class RideRecyclerAdapter extends RecyclerView.Adapter<RideRecyclerAdapte
                 acceptButton = itemView.findViewById(R.id.button13);
                 acceptButton.setOnClickListener(view -> {
                     Ride ride = rideList.get(getAdapterPosition());
+                    notifyItemRemoved(getAdapterPosition());
 
                     FirebaseDatabase database = FirebaseDatabase.getInstance();
                     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                    DatabaseReference userReference = database.getReference("users").child(user.getUid())
-                            .child("acceptedRides").child(ride.getKey());
-                    DatabaseReference offerReference = database.getReference("rideOffers").child(ride.getKey());
-                    DatabaseReference requestReference = database.getReference("rideRequests").child(ride.getKey());
+                    DatabaseReference userReference = database.getReference("users").child(user.getUid());
 
-                    userReference.setValue(ride);
+                    if (ride.getDriverID() == null) {
+                        ride.setDriverID(user.getUid());
+                        DatabaseReference requestReference = database.getReference("rideRequests").
+                                child(ride.getKey());
+                        DatabaseReference riderReference = database.getReference("users").
+                                child(ride.getRiderID());
 
-                    DatabaseReference creatorReference = database.getReference("users").child(ride.getUserID());
+                        riderReference.child("acceptedRides").child(ride.getKey()).setValue(ride);
+                        riderReference.child("createdRides").child(ride.getKey()).removeValue();
+                        requestReference.removeValue();
+                    }
 
-                    creatorReference.child("acceptedRides").child(ride.getKey())
-                            .setValue(ride);
-                    creatorReference.child("createdRides").child(ride.getKey()).removeValue();
+                    if (ride.getRiderID() == null) {
+                        ride.setRiderID(user.getUid());
+                        DatabaseReference offerReference = database.getReference("rideOffers").
+                                child(ride.getKey());
+                        DatabaseReference driverReference = database.getReference("users").
+                                child(ride.getDriverID());
 
-                    offerReference.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            if (dataSnapshot.exists()) {
-                             DatabaseReference acceptedOffer = database.getReference("acceptedOffers")
-                                     .child(ride.getKey());
-                             acceptedOffer.setValue(ride);
-                             offerReference.removeValue();
-                            }
-                        }
+                        driverReference.child("acceptedRides").child(ride.getKey()).setValue(ride);
+                        driverReference.child("createdRides").child(ride.getKey()).removeValue();
+                        offerReference.removeValue();
+                    }
 
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                    userReference.child("acceptedRides").child(ride.getKey()).setValue(ride);
+                    userReference.child("createdRides").child(ride.getKey()).removeValue();
 
-                        }
-                    });
-
-                    requestReference.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            if (dataSnapshot.exists()) {
-                                DatabaseReference acceptedRequest = database.getReference("acceptedRequests")
-                                        .child(ride.getKey());
-                                acceptedRequest.setValue(ride);
-                                requestReference.removeValue();
-                            }
-
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                        }
-                    });
                 });
             } else if (layoutNumber == 2) {
                 editButton = itemView.findViewById(R.id.button13);
@@ -144,16 +127,17 @@ public class RideRecyclerAdapter extends RecyclerView.Adapter<RideRecyclerAdapte
                         Toast.makeText(context, "Ride not removed", Toast.LENGTH_SHORT).show();
                     });
 
-                    DatabaseReference offerReference = database.getReference("rideOffers").
-                            child(ride.getKey());
-                    offerReference.removeValue().addOnSuccessListener(aVoid -> {
-                        Log.d("Yee", "Yass");
-                    }).addOnFailureListener(e -> {
-                        Log.d("Error", e.getMessage());
-                    });
+                    if (ride.getDriverID() != null) {
+                        DatabaseReference offerReference = database.getReference("rideOffers").
+                                child(ride.getKey());
 
-                    DatabaseReference requestReference = database.getReference("rideRequests").child(ride.getKey());
-                    requestReference.removeValue();
+                        offerReference.removeValue();
+                    } else if (ride.getRiderID() != null) {
+                        DatabaseReference requestReference = database.getReference("rideRequests").
+                                child(ride.getKey());
+
+                        requestReference.removeValue();
+                    }
                 });
             }
         }

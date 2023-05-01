@@ -55,11 +55,10 @@ public class RegisterActivity extends AppCompatActivity {
                     FirebaseUser user = firebaseAuth.getCurrentUser();
                     database.getReference("users").child(user.getUid()).child("points").setValue(150);
 
-                    Intent intent = new Intent(RegisterActivity.this, RideManagementActivity.class);
+                    Intent intent = new Intent(RegisterActivity.this, SignInActivity.class);
                     startActivity(intent);
 
                 } else {
-                    // If sign in fails, display a message to the user.
                     Log.w(DEBUG_TAG, "createUserWithEmail: failure", task.getException());
                     Toast.makeText(RegisterActivity.this, "Registration failed.", Toast.LENGTH_SHORT).show();
                 }

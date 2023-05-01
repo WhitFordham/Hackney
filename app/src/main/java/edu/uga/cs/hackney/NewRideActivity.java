@@ -52,7 +52,7 @@ public class NewRideActivity extends AppCompatActivity {
             auth = FirebaseAuth.getInstance();
             FirebaseUser user = auth.getCurrentUser();
             FirebaseDatabase database = FirebaseDatabase.getInstance();
-            rideOffer.setUserID(user.getUid());
+            rideOffer.setDriverID(user.getUid());
 
             DatabaseReference reference = database.getReference("rideOffers").push();
             String key = reference.getKey();
@@ -83,7 +83,7 @@ public class NewRideActivity extends AppCompatActivity {
             auth = FirebaseAuth.getInstance();
             FirebaseUser user = auth.getCurrentUser();
             FirebaseDatabase database = FirebaseDatabase.getInstance();
-            rideRequest.setUserID(user.getUid());
+            rideRequest.setRiderID(user.getUid());
 
             DatabaseReference reference = database.getReference("rideRequests").push();
             String key = reference.getKey();

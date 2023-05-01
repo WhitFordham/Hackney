@@ -65,19 +65,22 @@ public class EditRideActivity extends AppCompatActivity {
                     Double price = Double.valueOf(editPrice.getText().toString());
                     final Ride ride = new Ride(date, time, startLocation, endLocation, price);
 
-                    userReference.setValue(ride).addOnSuccessListener(aVoid -> {
-                        Toast.makeText(EditRideActivity.this, "Ride updated",
-                                Toast.LENGTH_SHORT).show();
-                    }).addOnFailureListener(e -> {
-                        Toast.makeText(EditRideActivity.this, "Ride not updated",
-                                Toast.LENGTH_SHORT).show();
-                    });
-
                     offerReference.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            if (dataSnapshot.exists())
+                            if (dataSnapshot.exists()) {
+                                ride.setDriverID(user.getUid());
+
+                                userReference.setValue(ride).addOnSuccessListener(aVoid -> {
+                                    Toast.makeText(EditRideActivity.this, "Ride updated",
+                                            Toast.LENGTH_SHORT).show();
+                                }).addOnFailureListener(e -> {
+                                    Toast.makeText(EditRideActivity.this, "Ride not updated",
+                                            Toast.LENGTH_SHORT).show();
+                                });
+
                                 offerReference.setValue(ride);
+                            }
                         }
 
                         @Override
@@ -89,8 +92,19 @@ public class EditRideActivity extends AppCompatActivity {
                     requestReference.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            if (dataSnapshot.exists())
+                            if (dataSnapshot.exists()) {
+                                ride.setRiderID(user.getUid());
+
+                                userReference.setValue(ride).addOnSuccessListener(aVoid -> {
+                                    Toast.makeText(EditRideActivity.this, "Ride updated",
+                                            Toast.LENGTH_SHORT).show();
+                                }).addOnFailureListener(e -> {
+                                    Toast.makeText(EditRideActivity.this, "Ride not updated",
+                                            Toast.LENGTH_SHORT).show();
+                                });
+
                                 requestReference.setValue(ride);
+                            }
                         }
 
                         @Override
@@ -98,6 +112,7 @@ public class EditRideActivity extends AppCompatActivity {
 
                         }
                     });
+
                     Intent intent = new Intent(EditRideActivity.this, UserRidesActivity.class);
                     startActivity(intent);
                 });
